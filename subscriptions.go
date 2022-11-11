@@ -159,6 +159,14 @@ func (c *Client) subscriptionsProcess(event *Event) {
 			return
 		}
 		c.Emit(event.Channel, &notification)
+	} else if strings.HasPrefix(event.Channel, "instrument.state") {
+		var notification models.InstrumentStateNotification
+		err := jsoniter.Unmarshal(event.Data, &notification)
+		if err != nil {
+			log.Printf("%v", err)
+			return
+		}
+		c.Emit(event.Channel, &notification)
 	} else {
 		log.Printf("%v", string(event.Data))
 	}
