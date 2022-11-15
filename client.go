@@ -217,9 +217,14 @@ func (c *Client) Call(method string, params interface{}, result interface{}) (er
 	return c.rpcConn.Call(c.ctx, method, params, result)
 }
 
+var _eventHandle func(event Event)
+
+func SetQuoteEventHandle(fn func(event Event)) {
+	_eventHandle = fn
+}
+
 // Handle implements jsonrpc2.Handler
 func (c *Client) Handle(ctx context.Context, conn *jsonrpc2.Conn, req *jsonrpc2.Request) {
-	//log.Printf("Handle %v", req.Method)
 	if req.Method == "subscription" {
 		// update events
 		if req.Params != nil && len(*req.Params) > 0 {
@@ -227,6 +232,9 @@ func (c *Client) Handle(ctx context.Context, conn *jsonrpc2.Conn, req *jsonrpc2.
 			if err := json.Unmarshal(*req.Params, &event); err != nil {
 				//c.setError(err)
 				return
+			}
+			if strings.HasPrefix(event.Channel, "quote") {
+				go _eventHandle(event)
 			}
 			c.subscriptionsProcess(&event)
 		}
