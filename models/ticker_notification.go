@@ -7,6 +7,13 @@ type TickerNotification struct {
 		Low    float64 `json:"low"`
 		High   float64 `json:"high"`
 	} `json:"stats"`
+	Greeks     struct {
+		Delta  float64 `json:"delta"`
+		Gamma  float64 `json:"gamma"`
+		Rho    float64 `json:"rho"`
+		Theta  float64 `json:"theta"`
+		Vega   float64 `json:"vega"`
+	} `json:"greeks"`
 	State           string  `json:"state"`
 	SettlementPrice float64 `json:"settlement_price"`
 	OpenInterest    float64 `json:"open_interest"`
