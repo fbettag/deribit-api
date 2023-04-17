@@ -41,3 +41,8 @@ func (c *Client) Withdraw(params *models.WithdrawParams) (result models.Withdraw
 	err = c.Call("private/withdraw", params, &result)
 	return
 }
+
+func (c *Client) SubmitTransferToSubaccount(params *models.SubmitTransferToSubaccountParams) (result models.Transfer, err error) {
+	err = c.Call("private/submit_transfer_to_subaccount", params, &result)
+	return
+}
